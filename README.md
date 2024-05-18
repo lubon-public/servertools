@@ -9,7 +9,8 @@ msiexec.exe /package PowerShell-7.4.2-win-x64.msi /quiet ADD_EXPLORER_CONTEXT_ME
 cd c:\program files\lubonscripts  
 gitportable\git-cmd.exe  
 git clone https://github.com/lubon-public/servertools.git   
-exit
+exit  
+
 
 
 
