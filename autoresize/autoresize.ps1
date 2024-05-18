@@ -25,7 +25,7 @@ if ($install.ispresent) {
     if ($null -ne $st) {
         Unregister-ScheduledTask -Taskname $st.Taskname 
     }
-    $action = New-ScheduledTaskAction -Execute powershell.exe -Argument ('-file "' + $env:programfiles + '\lubonscripts\autoresize.ps1 -auto"' )
+    $action = New-ScheduledTaskAction -Execute pwsh.exe -Argument ('-file "' + $env:programfiles + '\lubonscripts\autoresize\autoresize.ps1 -auto"' )
     $trigger = $trigger = New-ScheduledTaskTrigger -at 18:00 -Weekly -DaysofWeek Friday,Saturday
     $sectrigger = New-ScheduledTaskTrigger -once -at 18:00 -RepetitionInterval (New-TimeSpan -minutes 15) -RepetitionDuration (new-timespan -hours 8)
     $trigger.Repetition = $sectrigger.Repetition
