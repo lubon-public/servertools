@@ -20,11 +20,9 @@ if ($auto.ispresent) {
 
 if ($install.ispresent) {
     write-output "Installing modules"
-    #Install-Module PowershellGet -Force
-    #Install-PackageProvider -Name NuGet -force
-    Install-Module -Name PSTerminalServices #-force
-    Install-Module AZ.Automation #-force 
-    Install-Module AZ.compute #-force 
+    Install-Module -Name PSTerminalServices -force
+    Install-Module AZ.Automation -force 
+    Install-Module AZ.compute -force 
 
     Write-Output "scheduling Task"
     $st = Get-ScheduledTask -TaskName 'Lubon autoresize'
