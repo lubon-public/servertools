@@ -18,11 +18,26 @@ if ($auto.ispresent) {
     write-output "Auto present"
 }
 
+#check if modules are installed
+if (-not (Get-InstalledModule -Name PSTerminalServices)) {
+    write-output "Installing PSTerminalServices"
+    Install-Module -Name PSTerminalServices -force
+}
+if (-not (Get-InstalledModule -Name AZ.Automation)) {
+    write-output "Installing Az.Automation"
+    Install-Module -Name AZ.Automation -force
+}
+if (-not (Get-InstalledModule -Name AZ.compute)) {
+    write-output "Installing Az.Compute"
+    Install-Module -Name AZ.compute -force
+}
+
+
 if ($install.ispresent) {
     write-output "Installing modules"
-    Install-Module -Name PSTerminalServices -force
-    Install-Module AZ.Automation -force 
-    Install-Module AZ.compute -force 
+#    Install-Module -Name PSTerminalServices -force
+#    Install-Module AZ.Automation -force 
+#    Install-Module AZ.compute -force 
 
     Write-Output "scheduling Task"
     $st = Get-ScheduledTask -TaskName 'Lubon autoresize'
