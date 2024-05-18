@@ -29,7 +29,7 @@ if ($install.ispresent) {
     if ($null -ne $st) {
         Unregister-ScheduledTask -Taskname $st.Taskname 
     }
-    $action = New-ScheduledTaskAction -Execute "c:\Program Files\PowerShell\7\pwsh.exe" -Argument ('-file "' + $Myinvocation.mycommand.source +'" -auto' )
+    $action = New-ScheduledTaskAction -Execute "c:\Program Files\PowerShell\7\pwsh.exe" -Argument ('-executionpolicy bypass -file "' + $Myinvocation.mycommand.source +'" -auto' )
     $trigger = $trigger = New-ScheduledTaskTrigger -at 18:00 -Weekly -DaysofWeek Friday,Saturday
     $sectrigger = New-ScheduledTaskTrigger -once -at 18:00 -RepetitionInterval (New-TimeSpan -minutes 15) -RepetitionDuration (new-timespan -hours 8)
     $trigger.Repetition = $sectrigger.Repetition
