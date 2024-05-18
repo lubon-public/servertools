@@ -9,13 +9,19 @@ param(
     [switch]$auto
 
 )
+if ($psversiontable.PSVersion.Major -lt 7){
+    Write-Error -Message "Powershell needs to be at least version 7" -ErrorAction Stop
+}
+
+
 if ($auto.ispresent) {
     write-output "Auto present"
 }
 
 if ($install.ispresent) {
     write-output "Installing modules"
-    Install-PackageProvider -Name NuGet -force
+    #Install-Module PowershellGet -Force
+    #Install-PackageProvider -Name NuGet -force
     Install-Module -Name PSTerminalServices -force
     Install-Module AZ.Automation -force 
     Install-Module AZ.compute -force 
@@ -25,7 +31,7 @@ if ($install.ispresent) {
     if ($null -ne $st) {
         Unregister-ScheduledTask -Taskname $st.Taskname 
     }
-    $action = New-ScheduledTaskAction -Execute pwsh.exe -Argument ('-file "' + $env:programfiles + '\lubonscripts\autoresize\autoresize.ps1 -auto"' )
+    $action = New-ScheduledTaskAction -Execute pwsh.exe -Argument ('-file "' + $env:programfiles + '\lubonscripts\servertools\autoresize\autoresize.ps1 -auto"' )
     $trigger = $trigger = New-ScheduledTaskTrigger -at 18:00 -Weekly -DaysofWeek Friday,Saturday
     $sectrigger = New-ScheduledTaskTrigger -once -at 18:00 -RepetitionInterval (New-TimeSpan -minutes 15) -RepetitionDuration (new-timespan -hours 8)
     $trigger.Repetition = $sectrigger.Repetition
