@@ -12,7 +12,7 @@ param(
 if ($psversiontable.PSVersion.Major -lt 7){
     Write-Error -Message "Powershell needs to be at least version 7" -ErrorAction Stop
 }
-
+write-host $Myinvocation.mycommand.source
 
 if ($auto.ispresent) {
     write-output "Auto present"
@@ -22,16 +22,16 @@ if ($install.ispresent) {
     write-output "Installing modules"
     #Install-Module PowershellGet -Force
     #Install-PackageProvider -Name NuGet -force
-    Install-Module -Name PSTerminalServices -force
-    Install-Module AZ.Automation -force 
-    Install-Module AZ.compute -force 
+    Install-Module -Name PSTerminalServices #-force
+    Install-Module AZ.Automation #-force 
+    Install-Module AZ.compute #-force 
 
     Write-Output "scheduling Task"
     $st = Get-ScheduledTask -TaskName 'Lubon autoresize'
     if ($null -ne $st) {
         Unregister-ScheduledTask -Taskname $st.Taskname 
     }
-    $action = New-ScheduledTaskAction -Execute pwsh.exe -Argument ('-file "' + $env:programfiles + '\lubonscripts\servertools\autoresize\autoresize.ps1 -auto"' )
+    $action = New-ScheduledTaskAction -Execute "c:\Program Files\PowerShell\7\pwsh.exe" -Argument ('-file "' + $Myinvocation.mycommand.source +'" -auto' )
     $trigger = $trigger = New-ScheduledTaskTrigger -at 18:00 -Weekly -DaysofWeek Friday,Saturday
     $sectrigger = New-ScheduledTaskTrigger -once -at 18:00 -RepetitionInterval (New-TimeSpan -minutes 15) -RepetitionDuration (new-timespan -hours 8)
     $trigger.Repetition = $sectrigger.Repetition
@@ -53,6 +53,7 @@ if (($sessions.count -le $limit) -and ($uptime -gt $uptimelimit)) {
         $params = [ordered]@{"vmname" = $vm.Name }      
         if ($auto.ispresent ) {	  
             Start-AzAutomationRunbook -name ResizeToSave -ResourceGroupName $vm.Tags['ResizeRG'] -AutomationAccountName $vm.Tags['ResizeACC'] -Parameters $params
+	    exit 0	
         }
         else {
             $msg = 'Auto is not present. Execute Runbook, will resize server? [Y/N]'
@@ -68,4 +69,6 @@ if (($sessions.count -le $limit) -and ($uptime -gt $uptimelimit)) {
 }
 else {
     write-output ("Do nothing: " + $session.Count)
+    exit 100
+
 }
