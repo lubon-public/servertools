@@ -10,7 +10,7 @@ cd c:\program files\lubonscripts
 gitportable\git-cmd.exe  
 git clone https://github.com/lubon-public/servertools.git   
 exit  
-
-
+  
+next
 
 
